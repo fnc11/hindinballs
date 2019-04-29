@@ -38,7 +38,7 @@ to_keep = set()
 
 # embwords.txt contains all the words which are present in the Hindi Word embeddings file
 # sets2remove.txt contains all the synsets which needs to be removed from the Hindi Wordnet
-with open("bembwords.txt", 'r') as emb_word_f, open("sets2remove.txt", 'w') as inspectf:
+with open("embwords.txt", 'r') as emb_word_f, open("sets2remove.txt", 'w') as inspectf:
     embedding_content = emb_word_f.read()
     bwords = embedding_content.split("$")
     print(len(bwords))
