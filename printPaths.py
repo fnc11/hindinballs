@@ -1,6 +1,6 @@
 import pickle
 
-# Loading input files
+# Loading input dictionaries
 word2synsets = pickle.load(open("WordSynsetDict.pk", 'rb'))
 synset2words = pickle.load(open("SynsetWords.pk", 'rb'))
 synset2hypes = pickle.load(open("SynsetHypernym.pk", 'rb'))
