@@ -128,27 +128,36 @@ with open("tree_struct.txt", 'r') as tree_struct:
 levelDict = root.printLevelOrder()
 # print(levelDict)
 
+
+
 # print(wordAndOrderDict)
 # Now replace set in the levelDict with word and sort them, and replace the -1 in the wordAndOrderDict
 # with correct place
-setOrderNum = {}
+setOrderNum = {'root': 1 }
 with open("sameLevelWords.txt", "w") as slw:
-    for level, lis in levelDict.items():
-        clis = lis.copy()
-        slw.write(str(level)+":  ")
-        for i in range(0, len(clis)):
-            # to avoid cases if there's no set to Word pair in set2Word
-            if clis[i] in set2Word.keys():
-                clis[i] = set2Word[clis[i]]
-        clis.sort()
-        # print(clis)
-        for i in range(0, len(clis)):
-            if clis[i] in word2Set.keys():
-                setOrderNum[word2Set[clis[i]]] = i+1
-                slw.write(clis[i] + "." + str(setOrderNum[word2Set[clis[i]]]) + ", ")
-            else:
-                setOrderNum[clis[i]] = i+1
-                slw.write(clis[i] + "." + str(setOrderNum[clis[i]]) + ", ")
+    stck =[root]
+    while(True):
+        if len(stck) != 0:
+            temp = stck.pop(0)
+            if len(temp.children) > 0:
+                o_list = temp.children
+                c_list  = []
+                for child in o_list:
+                    word_name = child.name
+                    if child.name in set2Word.keys():    
+                        word_name = set2Word[child.name]
+                    c_list.append(word_name)
+                    stck.append(child)
+                c_list.sort()
+                k=0
+                for i in c_list:
+                    k=k+1
+                    if i in word2Set.keys():
+                        setOrderNum[word2Set[i]] = k
+                    else:
+                        setOrderNum[i] = k
+        else:
+            break
         slw.write("\n\n")
 
 # printing cat codes of all the words in a file
@@ -177,6 +186,9 @@ with open("catCodes.txt", "w") as ctcd:
             sen += " 0"
         ctcd.write(word+" "+sen+"\n")
     # print(count)
+
+
+
 
 # root.printTree()
 # printing word sense children file as English
