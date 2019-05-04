@@ -2,7 +2,7 @@ import pickle
 
 # Loading input dictionaries
 word2synsets = pickle.load(open("WordSynsetDict.pk", 'rb'))
-synset2words = pickle.load(open("SynsetWords.pk", 'rb'))
+#synset2words = pickle.load(open("SynsetWords.pk", 'rb'))
 synset2hypes = pickle.load(open("SynsetHypernym.pk", 'rb'))
 
 # All the paths from the leaf/word to root will be printed in tree_struct.txt
@@ -38,7 +38,7 @@ to_keep = set()
 
 # embwords.txt contains all the words which are present in the Hindi Word embeddings file
 # sets2remove.txt contains all the synsets which needs to be removed from the Hindi Wordnet
-with open("embwords.txt", 'r') as emb_word_f, open("sets2remove.txt", 'w') as inspectf:
+with open("/home/lab-mueller/Documents/AILab/wordEmbs.txt", 'r') as emb_word_f, open("sets2remove.txt", 'w') as inspectf:
     embedding_content = emb_word_f.read()
     bwords = embedding_content.split("$")
     print(len(bwords))
@@ -107,10 +107,18 @@ def printUptoRoot(sen, key, wordtype):
                 else:
                     print("Rare case!")
                     # reminder why not add them directly to the root
-                    for type, lis in synset2hypes[key].items():
-                        sets = synset2hypes[key][int(type)]
-                        key = sets[0]
-                        break
+                    for typ, lis in synset2hypes[key].items():
+                        lis = synset2hypes[key][int(typ)]
+                        key = lis[0]
+                        to_break = False
+                        for i in range(0, len(lis)):
+                            # we could do the to_remove check here for better results
+                            if lis[i] not in to_remove:
+                                to_break = True
+                                key = lis[i]
+                                break
+                        if to_break:
+                            break
             else:
                 # Analyze this path and remove the sets which belongs to to_remove set
                 tokens = sen.split("<-")
