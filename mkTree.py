@@ -117,13 +117,30 @@ with open("tree_struct.txt", 'r') as tree_struct:
                     allNodes[prev_token].add_child(temp)
         # now for the last node, as word
         name = str(tokens[0])
-        temp = Tree(name)
-        allNodes[name] = temp
         # if the word is not directly attached to the root
         if num_tokens >= 3:
-            allNodes[tokens[2]].add_child(temp)
+#            child_found = False
+#            child_nodes = allNodes[tokens[2]].children
+#            for child in child_nodes:
+#                if child.name == name:
+#                    child.add_child(temp)
+#                    child_found = True
+#                    break;
+#            if not child_found:
+#                allNodes[tokens[2]].add_child(temp)
+            if name in word2Set.keys():
+                name = word2Set[name]
+            if name not in allNodes.keys():
+                temp = Tree(name)
+                allNodes[name] = temp
+                allNodes[tokens[2]].add_child(temp)
         else:
-            allNodes["root"].add_child(temp)
+            if name in word2Set.keys():
+                name = word2Set[name]
+            if name not in allNodes.keys():
+                temp = Tree(name)
+                allNodes[name] = temp
+                allNodes["root"].add_child(temp)
 
 levelDict = root.printLevelOrder()
 # print(levelDict)
@@ -163,28 +180,59 @@ with open("sameLevelWords.txt", "w") as slw:
 # printing cat codes of all the words in a file
 with open("catCodes.txt", "w") as ctcd:
     # count = 0
+    # A dictionary to hold all the words whose cat_codes are already generated
+    cat_printed = {}
     for path in clean_paths:
         tokens = path.split("<-")
         num_of_tokens = len(tokens)
-        word = tokens[0]
-        if tokens[0] in word2Set.keys():
-            sen = str(setOrderNum[word2Set[tokens[0]]])
-        # discussion need to be done here
-        elif tokens[0] in setOrderNum.keys():
-            # count += 1
-            sen = str(setOrderNum[tokens[0]])
-        else:
-            continue
+#        for i in range(0, num_of_tokens):   
+#            if i==1:
+#                continue
+#            word = tokens[i]
+#            if word in set2Word.key():
+#                word = set2Word[word]
+#            sen = ""
+#            if word not in cat_printed:
+#                if word in word2Set.keys():
+#                    sen = str(setOrderNum[word2Set[tokens[i]]])+" "+sen
+#                # discussion need to be done here
+#                elif word in setOrderNum.keys():
+#                    # count += 1
+#                    sen = str(setOrderNum[tokens[i]])+" "+sen
+#                else:
+#                    print("Evil case")
+#                    continue
 
-        for i in range(2, num_of_tokens):
-            sen = str(setOrderNum[tokens[i]])+" "+sen
-
-        # root order for every word
-        # need to add special case for root*
-        sen = "1 "+sen
-        for j in range(0, 13-num_of_tokens):
-            sen += " 0"
-        ctcd.write(word+" "+sen+"\n")
+        for j in range(0, num_of_tokens):
+            leaf = tokens[j]
+            if leaf in set2Word.keys():
+                leaf = set2Word[leaf]
+            if leaf not in cat_printed:
+                cat_printed[leaf]=True
+                sen = ""
+                slen = 0
+                for i in range(j, num_of_tokens):
+                    if j==0 and i==1:
+                        slen = 1
+                        continue
+                    word = tokens[i]
+                    if word in set2Word.keys():
+                        word = set2Word[word]
+                    if word in word2Set.keys():
+                        sen = str(setOrderNum[word2Set[word]])+" "+sen
+                    # discussion need to be done here
+                    elif word in setOrderNum.keys():
+                        # count += 1
+                        sen = str(setOrderNum[word])+" "+sen
+                    else:
+                        print("Evil case")
+                        continue
+                # root order for every word
+                # need to add special case for root*
+                sen = "1 "+sen.strip()
+                for k in range(0, 12-(num_of_tokens-j-slen)):
+                    sen += " 0"
+                ctcd.write(leaf+" "+sen+"\n")
     # print(count)
 
 
