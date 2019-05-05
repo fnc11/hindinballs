@@ -230,7 +230,7 @@ with open("catCodes.txt", "w") as ctcd:
                 # root order for every word
                 # need to add special case for root*
                 sen = "1 "+sen.strip()
-                for k in range(0, 12-(num_of_tokens-j-slen)):
+                for k in range(0, 13-(num_of_tokens-j-slen)):
                     sen += " 0"
                 ctcd.write(leaf+" "+sen+"\n")
     # print(count)
