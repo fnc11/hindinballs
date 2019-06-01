@@ -103,3 +103,20 @@ def create_training_testing_dataset_for_member_prediction(NodeChildrenFile="",Nu
             num += 1
     print(outPutFile, ' is created for training and testing\n')
     return outPutFile
+
+
+create_training_testing_dataset_for_member_prediction("nodechildren.txt", 100, 10,
+                                                          "wordSenseChildren.txt", "catCodes.txt",
+                                                          "unknownWordsList.txt", 100, 1,
+                                                          "membershipPredictionTask.txt")
+
+create_training_testing_dataset_for_member_prediction("nodechildren.txt", 100, 10,
+                                                          "wordSenseChildren.txt", "catCodes.txt",
+                                                          "unknownWordsList.txt", 100, 5,
+                                                          "membershipPredictionTask.txt")
+
+for i in range(1, 10):
+    create_training_testing_dataset_for_member_prediction("nodechildren.txt", 100, 10,
+                                                          "wordSenseChildren.txt", "catCodes.txt",
+                                                          "unknownWordsList.txt", 100, i*10,
+                                                          "membershipPredictionTask.txt")

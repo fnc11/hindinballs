@@ -253,3 +253,28 @@ def find_node_with_children(fixnum, sz):
 
     # print(allNodes)
     print(selected)
+
+
+def convert_st_to_word_paths():
+    with open("paths_with_sets.txt",'r') as filest, open("paths_with_words.txt", 'w') as filepths:
+        cont = filest.read()
+        lines = cont.split('\n')
+        for line in lines[:-1]:
+            # print(line)
+            sts = line.strip().split()
+            sts[-1] = "*root*"
+            num = len(sts)
+            for i in range(0, num-1):
+                try:
+                    sts[i] = set2Word[sts[i]]
+                except KeyError:
+                    continue
+            filepths.write(' '.join(sts) + '\n')
+
+# with open("paths_with_sets.txt",'w') as filest:
+#     root.print_all_paths("", filest)
+
+convert_st_to_word_paths()
+
+
+

@@ -7,8 +7,8 @@ def isEnglish(s):
         return True
 
 
-def find_unknown_words:
-    with open('catCodes.txt','r') as catCodef, open('/home/fnc11/HindiTest/wordEmbs.txt','r') as word_embsf:
+def find_unknown_words():
+    with open('catCodes.txt','r') as catCodef, open('/home/fnc11/HindiTest/wordEmbs.txt', 'r') as word_embsf:
         words = []
 
         for line in catCodef.readlines():
@@ -25,7 +25,6 @@ def find_unknown_words:
         for word in unknownWords:
             if isEnglish(word):
                 eng_words.append(word)
-        num = len(eng_words)
 
         for eword in eng_words:
             unknownWords.remove(eword)

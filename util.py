@@ -78,6 +78,12 @@ class Tree(object):
                 stck.append(child)
         return child_list
 
-    def print_all_paths(self):
+    def print_all_paths(self, path, filest):
         assert isinstance(self, Tree)
-        """Write your code here"""
+        new_path = self.name+" "+path
+        # print(new_path)
+        filest.write(new_path+"\n")
+        if len(self.children)!= 0:
+            for child in self.children:
+                child.print_all_paths(new_path, filest)
+
