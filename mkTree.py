@@ -1,63 +1,5 @@
-class Tree(object):
-    # "Generic tree node."
-    def __init__(self, name='root', children=None):
-        self.name = name
-        self.children = []
-        if children is not None:
-            for child in children:
-                self.add_child(child)
-
-    def add_child(self, node):
-        assert isinstance(node, Tree)
-        self.children.append(node)
-
-    def printTree(self):
-        assert isinstance(self, Tree)
-        stck = [self]
-        while(True):
-            if len(stck) != 0:
-                temp = stck.pop(0)
-                print(temp.name)
-                if len(temp.children) > 0:
-                    for child in temp.children:
-                        stck.insert(0, child)
-            else:
-                break
-
-    def printLevelOrder(self):
-        assert isinstance(self, Tree)
-        que = [self]
-        nums_at_level = 1
-        levelNum = 0
-        # maxLevel = -1
-        levelDict = {0:[]}
-        for i in range(1,15):
-            levelDict[i]=[]
-        count = 0
-        while(True):
-            if nums_at_level == 0:
-                # print("level: "+str(levelNum))
-                # if levelNum > maxLevel:
-                #     maxLevel = levelNum
-                levelNum += 1
-                nums_at_level = count
-                count = 0
-
-            if len(que) != 0:
-                nums_at_level -= 1
-                temp = que.pop(0)
-                # print(temp.name)
-                levelDict[levelNum].append(temp.name)
-                if len(temp.children) > 0:
-                    for child in temp.children:
-                        que.append(child)
-                        count += 1
-            else:
-                break
-        return levelDict
-        # print(maxLevel)
-
-
+import random
+from util import Tree
 
 root = Tree("root")
 allNodes = {"root": root}
@@ -142,11 +84,11 @@ with open("tree_struct.txt", 'r') as tree_struct:
                 allNodes[name] = temp
                 allNodes["root"].add_child(temp)
 
-levelDict = root.printLevelOrder()
+# levelDict = root.printLevelOrder()
 # print(levelDict)
 
 
-
+"""No needed for now
 # print(wordAndOrderDict)
 # Now replace set in the levelDict with word and sort them, and replace the -1 in the wordAndOrderDict
 # with correct place
@@ -176,6 +118,9 @@ with open("sameLevelWords.txt", "w") as slw:
         else:
             break
         slw.write("\n\n")
+
+
+
 
 # printing cat codes of all the words in a file
 with open("catCodes.txt", "w") as ctcd:
@@ -262,3 +207,49 @@ with open("wordSenseChildren.txt","w") as wsc:
             wsc.write("\n")
         else:
             break
+
+"""
+
+
+def print_node_children(fixnum):
+    # read the 900 nodes file
+    with open("prs.txt",'r') as alf, open("nodechildren.txt",'w') as nodechildf:
+        cont = alf.read()
+        lines = cont.split('\n')
+        num = len(lines)
+        count = 0
+        for i in range(0, num):
+            count += 1
+            tect = lines[i].split(':')
+            fin = tect[1].strip()
+            node_children_set = allNodes[fin].node_and_children()
+            node_children_list = []
+            for st in node_children_set:
+                try:
+                    node_children_list.append(set2Word[st])
+                except KeyError:
+                    node_children_list.append(st)
+            nodechildf.write(' '.join(node_children_list) + '\n')
+            if count >= fixnum:
+                break
+
+
+# Making a random selection out of dictionary and checking if it has childrens more than 10
+def find_node_with_children(fixnum, sz):
+    count = 0
+    selected = {}
+    with open("selected_new.txt", 'w') as examf:
+        while True:
+            picked, node = random.choice(list(allNodes.items()))
+
+            if picked not in selected.keys() and allNodes[picked].child_size(sz) > sz:
+                count += 1
+                print("Found "+str(count)+": "+picked)
+                selected[picked] = True
+                examf.write(":"+picked+"\n")
+
+            if count == fixnum:
+                break
+
+    # print(allNodes)
+    print(selected)
